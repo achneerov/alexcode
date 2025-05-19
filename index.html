@@ -32,13 +32,6 @@
                 >
                     Run Code
                 </button>
-                <div
-                    id="pyodide-loading-status"
-                    class="text-xs text-yellow-600 ml-2"
-                    style="display: none"
-                >
-                    Loading Python environment...
-                </div>
             </div>
         </div>
 
@@ -115,9 +108,9 @@
                 "console-output-container",
             );
             const consoleSummaryEl = document.getElementById("console-summary");
-            const pyodideLoadingStatus = document.getElementById(
-                "pyodide-loading-status",
-            );
+            // const pyodideLoadingStatus = document.getElementById( // Removed
+            //  "pyodide-loading-status",
+            // );
             const problemTitleElement =
                 document.getElementById("problem-title");
             const problemTextContainer = document.getElementById(
@@ -332,9 +325,9 @@
                 codeEditor.value = pythonBoilerplate;
                 updateLineNumbers();
                 runCodeBtn.disabled = !pyodideReady;
-                pyodideLoadingStatus.style.display = pyodideReady
-                    ? "none"
-                    : "block";
+                // pyodideLoadingStatus.style.display = pyodideReady // Removed
+                //  ? "none"
+                //  : "block";
             }
 
             function clearConsole() {
@@ -364,7 +357,7 @@
 
             async function initializePyodide() {
                 runCodeBtn.disabled = true;
-                pyodideLoadingStatus.style.display = "block";
+                // pyodideLoadingStatus.style.display = "block"; // Removed
                 try {
                     pyodide = await loadPyodide({
                         stdout: (text) => {
@@ -392,23 +385,23 @@
                         `<span class="text-blue-700">Python environment ready.</span>`,
                     );
                     pyodideReady = true;
-                    runCodeBtn.disabled = false;
+                    // runCodeBtn.disabled = false; // Already handled by updateEditorWithPythonBoilerplate or later logic
                     if (currentQuestionData) {
                         runCodeBtn.disabled = false;
                     } else {
-                        runCodeBtn.disabled = true;
+                        runCodeBtn.disabled = true; // Keep disabled if no question yet
                     }
                 } catch (error) {
                     console.error("Failed to load Pyodide:", error);
                     appendToConsole(
                         `<span class="text-red-700">Error loading Pyodide: ${escapeHTML(error.message)}</span>`,
                     );
-                    pyodideLoadingStatus.textContent =
-                        "Failed to load Python environment.";
-                    pyodideLoadingStatus.style.color = "#EF4444";
+                    // pyodideLoadingStatus.textContent = // Removed
+                    //  "Failed to load Python environment.";
+                    // pyodideLoadingStatus.style.color = "#EF4444"; // Removed
                     runCodeBtn.disabled = true;
                 } finally {
-                    pyodideLoadingStatus.style.display = "none";
+                    // pyodideLoadingStatus.style.display = "none"; // Removed
                 }
             }
 
@@ -551,10 +544,12 @@
 
                     currentTestCases = data.test_cases || [];
                     updateEditorWithPythonBoilerplate(
+                        // This will handle runCodeBtn.disabled based on pyodideReady
                         data.function_params_names,
                     );
 
                     if (pyodideReady) {
+                        // Additional check to ensure button is enabled if Pyodide is ready
                         runCodeBtn.disabled = false;
                     }
                     clearConsole();
