@@ -10,182 +10,12 @@
             tailwind.config = {
                 theme: {
                     extend: {
-                        colors: {
-                            // 'brand-accent': '#4F46E5',
-                        },
+                        colors: {},
                     },
                 },
             };
         </script>
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                overflow: hidden; /* Prevent page scroll */
-                font-family: "Inter", sans-serif;
-                background-color: #e2e8f0; /* Webpage background - THIS IS OUR TARGET SPLITTER COLOR */
-            }
-
-            body {
-                display: flex;
-                flex-direction: column;
-                padding: 12px; /* Creates an outer "border" effect using the body's background color */
-                box-sizing: border-box;
-            }
-
-            .header-container {
-                flex-shrink: 0;
-            }
-
-            .main-content-area {
-                flex-grow: 1;
-                display: flex;
-                min-height: 0;
-                background-color: #e2e8f0;
-            }
-
-            .pane {
-                overflow: auto;
-                padding: 1rem;
-                background-color: #ffffff;
-                border-radius: 0.5rem;
-                box-shadow:
-                    0 1px 3px 0 rgba(0, 0, 0, 0.1),
-                    0 1px 2px 0 rgba(0, 0, 0, 0.06);
-                position: relative;
-            }
-
-            .problem-pane {
-                /* Styles handled by .pane */
-            }
-
-            #right-container {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-            }
-
-            .editor-pane {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .output-pane {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .console-output-container {
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                font-family: "Courier New", Courier, monospace;
-                background-color: #f9fafb; /* gray-50 */
-                color: #374151; /* gray-700 */
-                padding: 0.75rem;
-                border-radius: 0.375rem; /* rounded-md */
-                overflow-y: auto;
-                border: 1px solid #e5e7eb; /* gray-200 */
-                font-size: 0.875rem; /* text-sm */
-                flex-grow: 1;
-                min-height: 100px;
-            }
-
-            .problem-description-code {
-                background-color: #f3f4f6; /* gray-100 */
-                color: #c026d3; /* fuchsia-600 */
-                padding: 0.125rem 0.25rem;
-                border-radius: 0.25rem;
-                font-family: "Courier New", Courier, monospace;
-                font-size: 0.875em;
-            }
-
-            .splitter {
-                background-color: #e2e8f0;
-                z-index: 10;
-            }
-
-            .splitter-vertical {
-                width: 6px;
-                cursor: col-resize;
-            }
-
-            .splitter-horizontal {
-                height: 6px;
-                cursor: row-resize;
-            }
-
-            .splitter:hover {
-                background-color: #9ca3af;
-            }
-
-            #editor-wrapper {
-                display: flex;
-                width: 100%;
-                height: 100%;
-                background-color: #f9fafb;
-                border: 1px solid #d1d5db;
-                border-radius: 0.375rem;
-                overflow: hidden;
-                position: relative;
-                margin-top: 0.25rem;
-            }
-
-            #editor-wrapper:focus-within {
-                border-color: #4f46e5;
-                box-shadow: 0 0 0 1px #4f46e5;
-            }
-
-            #line-numbers {
-                min-width: 45px;
-                padding: 0.625rem 0.5rem 0.625rem 0.625rem;
-                box-sizing: border-box;
-                text-align: right;
-                font-family: "Courier New", Courier, monospace;
-                font-size: 0.875rem;
-                line-height: 1.5;
-                color: #6b7280;
-                background-color: #f9fafb;
-                user-select: none;
-                -webkit-user-select: none;
-                overflow: hidden;
-                height: 100%;
-            }
-
-            #line-numbers div {
-                min-height: calc(0.875rem * 1.5);
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-            }
-
-            #code-editor {
-                flex-grow: 1;
-                height: 100%;
-                box-sizing: border-box;
-                resize: none;
-                font-family: "Courier New", Courier, monospace;
-                font-size: 0.875rem;
-                line-height: 1.5;
-                color: #374151;
-                padding-top: 0.625rem;
-                padding-right: 0.625rem;
-                padding-bottom: 0.625rem;
-                padding-left: 10px;
-                background-color: transparent;
-                border: none;
-                outline: none;
-                overflow-y: scroll !important;
-            }
-
-            .no-select {
-                user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
@@ -202,13 +32,13 @@
                 >
                     Run Code
                 </button>
-            </div>
-            <div
-                id="pyodide-loading-status"
-                class="text-xs text-yellow-600 mt-1 text-center"
-                style="display: none"
-            >
-                Loading Python environment...
+                <div
+                    id="pyodide-loading-status"
+                    class="text-xs text-yellow-600 ml-2"
+                    style="display: none"
+                >
+                    Loading Python environment...
+                </div>
             </div>
         </div>
 
@@ -278,7 +108,6 @@
         </div>
 
         <script>
-            // DOM Elements
             const codeEditor = document.getElementById("code-editor");
             const lineNumbersDiv = document.getElementById("line-numbers");
             const runCodeBtn = document.getElementById("run-code-btn");
@@ -295,7 +124,6 @@
                 "problem-text-container",
             );
 
-            // Panes and Splitters
             const problemPane = document.getElementById("problem-pane");
             const rightContainer = document.getElementById("right-container");
             const editorPane = document.getElementById("editor-pane");
@@ -307,7 +135,6 @@
             );
             const mainContainer = document.getElementById("main-container");
 
-            // --- START: Resizer Logic (Unchanged from original) ---
             function makeResizable(
                 splitterElement,
                 firstElement,
@@ -432,9 +259,7 @@
                 outputPane,
                 "horizontal",
             );
-            // --- END: Resizer Logic ---
 
-            // --- START: Line Number Logic (Unchanged from original) ---
             function updateLineNumbers() {
                 if (!codeEditor || !lineNumbersDiv) return;
                 const editorStyle = window.getComputedStyle(codeEditor);
@@ -468,7 +293,7 @@
                         e.preventDefault();
                         const start = this.selectionStart;
                         const end = this.selectionEnd;
-                        const tabSpaces = "  "; // Two spaces
+                        const tabSpaces = "  ";
                         this.value =
                             this.value.substring(0, start) +
                             tabSpaces +
@@ -485,28 +310,24 @@
                     setTimeout(updateLineNumbers, 0),
                 );
             }
-            // --- END: Line Number Logic ---
 
             let pyodide = null;
             let pyodideReady = false;
             let pyodideStdoutForTest = null;
             let pyodideStderrForTest = null;
 
-            // --- MODIFIED: Global variable for test cases, will be populated from JSON ---
             let currentTestCases = [];
-            let currentQuestionData = null; // To store the whole JSON data
+            let currentQuestionData = null;
 
-            // --- MODIFIED: Function to update editor with boilerplate based on question data ---
             function updateEditorWithPythonBoilerplate(
                 paramNames = ["nums", "target"],
             ) {
-                // Default params for fallback
                 const functionSignature = `def function(${paramNames.join(", ")}):`;
                 const pythonBoilerplate = `${functionSignature}
     # Your solution here
     # Example: print(f"Processing ${paramNames[0]}: {${paramNames[0]}}")
-    print("Hello from function!") # Default print
-    return [] # Default return
+    print("Hello from function!")
+    return []
 `;
                 codeEditor.value = pythonBoilerplate;
                 updateLineNumbers();
@@ -571,12 +392,11 @@
                         `<span class="text-blue-700">Python environment ready.</span>`,
                     );
                     pyodideReady = true;
-                    runCodeBtn.disabled = false; // Enable run button if question already loaded
+                    runCodeBtn.disabled = false;
                     if (currentQuestionData) {
-                        // Check if question data is loaded before enabling
                         runCodeBtn.disabled = false;
                     } else {
-                        runCodeBtn.disabled = true; // Keep disabled if no question yet
+                        runCodeBtn.disabled = true;
                     }
                 } catch (error) {
                     console.error("Failed to load Pyodide:", error);
@@ -585,17 +405,15 @@
                     );
                     pyodideLoadingStatus.textContent =
                         "Failed to load Python environment.";
-                    pyodideLoadingStatus.style.color = "#EF4444"; // Red
+                    pyodideLoadingStatus.style.color = "#EF4444";
                     runCodeBtn.disabled = true;
                 } finally {
                     pyodideLoadingStatus.style.display = "none";
                 }
             }
 
-            // --- NEW: Function to parse markdown-like description to HTML ---
             function parseDescriptionToHtml(description) {
                 if (!description) return "<p>No description provided.</p>";
-                // Replace ```text\ncode\n``` with <pre><code>...</code></pre> for multiline code blocks
                 description = description.replace(
                     /```([a-zA-Z]*)\n([\s\S]*?)\n```/g,
                     (match, lang, code) => {
@@ -604,57 +422,46 @@
                     },
                 );
 
-                // Replace `code` with <code class="problem-description-code">...</code>
                 description = description.replace(
                     /`([^`]+)`/g,
                     '<code class="problem-description-code">$1</code>',
                 );
 
-                // Split by newlines that are not inside <pre> tags yet
-                // This is a simplification; robust markdown parsing is complex.
-                // We'll wrap remaining text blocks in <p> tags.
-                const parts = description.split(/(\n\n+|\n(?!\s*<pre>))/); // Split by double newlines or single newlines not followed by <pre>
+                const parts = description.split(/(\n\n+|\n(?!\s*<pre>))/);
                 let html = "";
                 parts.forEach((part) => {
                     if (part.trim().startsWith("<pre")) {
-                        html += part; // Add preformatted blocks as is
+                        html += part;
                     } else if (part.trim()) {
-                        // For other text, wrap in <p> if not already, and handle examples/constraints specifically
-                        // This simple version wraps each non-empty, non-pre block in a <p>
-                        // More sophisticated parsing would be needed for complex markdown.
                         if (
                             part.includes("<strong>Example") ||
                             part.includes("<strong>Constraints:") ||
                             part.includes("<em>Follow-up:")
                         ) {
-                            html += `<div>${part.replace(/\n/g, "<br>")}</div>`; // Keep structure for examples/constraints
+                            html += `<div>${part.replace(/\n/g, "<br>")}</div>`;
                         } else {
                             html += `<p>${part.replace(/\n/g, "<br>")}</p>`;
                         }
                     }
                 });
-                // Fallback if the above split doesn't produce meaningful paragraphs for simple cases
                 if (!html.includes("<p>") && !html.includes("<pre")) {
                     html = description
                         .split("\n")
                         .map((line) => {
                             if (line.trim() === "") return "";
-                            // Basic handling for lists (simplistic)
                             if (line.trim().startsWith("- ")) {
-                                return `<ul><li class="ml-4 list-disc">${line.trim().substring(2)}</li></ul>`; // This creates separate ULs, better to group
+                                return `<ul><li class="ml-4 list-disc">${line.trim().substring(2)}</li></ul>`;
                             }
                             return `<p>${line}</p>`;
                         })
                         .join("");
                 }
 
-                // A more refined approach for lists:
                 let finalHtml = "";
                 let inList = false;
                 const lines = description.split("\n");
                 for (let i = 0; i < lines.length; i++) {
                     let line = lines[i];
-                    // Handle code blocks first
                     if (line.startsWith("```")) {
                         let codeBlock = line + "\n";
                         i++;
@@ -665,12 +472,11 @@
                             codeBlock += lines[i] + "\n";
                             i++;
                         }
-                        if (i < lines.length) codeBlock += lines[i]; // Add closing ```
-                        finalHtml += parseDescriptionToHtml(codeBlock); // Recursive call for the ``` part
+                        if (i < lines.length) codeBlock += lines[i];
+                        finalHtml += parseDescriptionToHtml(codeBlock);
                         continue;
                     }
 
-                    // Handle inline code
                     line = line.replace(
                         /`([^`]+)`/g,
                         '<code class="problem-description-code">$1</code>',
@@ -704,13 +510,12 @@
                             !finalHtml.endsWith("</ul>") &&
                             !finalHtml.endsWith("</div>")
                         ) {
-                            // Add a paragraph for spacing if it's an empty line between content
                             finalHtml += "<p>&nbsp;</p>";
                         }
                     }
                 }
                 if (inList) {
-                    finalHtml += "</ul>"; // Close list if file ends with list items
+                    finalHtml += "</ul>";
                 }
                 return (
                     finalHtml ||
@@ -718,13 +523,12 @@
                 );
             }
 
-            // --- NEW: Function to load question data ---
             async function loadQuestionData(questionId) {
-                runCodeBtn.disabled = true; // Disable run button while loading
+                runCodeBtn.disabled = true;
                 problemTitleElement.textContent = `Loading Question ${questionId}...`;
                 problemTextContainer.innerHTML =
                     "<p>Fetching question details...</p>";
-                currentTestCases = []; // Clear previous test cases
+                currentTestCases = [];
                 currentQuestionData = null;
 
                 try {
@@ -735,7 +539,7 @@
                         );
                     }
                     const data = await response.json();
-                    currentQuestionData = data; // Store the loaded data
+                    currentQuestionData = data;
 
                     document.title = `Q${questionId}: ${data.title || "Coding Challenge"} - Python IDE`;
                     problemTitleElement.textContent = data.title
@@ -751,10 +555,9 @@
                     );
 
                     if (pyodideReady) {
-                        // Only enable if Pyodide is also ready
                         runCodeBtn.disabled = false;
                     }
-                    clearConsole(); // Clear console for the new question
+                    clearConsole();
                     appendToConsole(
                         `<span class="text-blue-700">Successfully loaded Question ${questionId}.</span>`,
                     );
@@ -762,22 +565,20 @@
                     console.error("Error loading question data:", error);
                     problemTitleElement.textContent = `Error Loading Question ${questionId}`;
                     problemTextContainer.innerHTML = `<p class="text-red-600">Could not load question data for ID ${questionId}. Please check if '${questionId}.json' exists and is accessible. Details: ${escapeHTML(error.message)}</p>`;
-                    updateEditorWithPythonBoilerplate(); // Load default boilerplate
-                    runCodeBtn.disabled = true; // Keep run button disabled on error
+                    updateEditorWithPythonBoilerplate();
+                    runCodeBtn.disabled = true;
                 }
             }
 
             function compareArrays(arr1, arr2) {
                 if (!arr1 && !arr2) return true;
                 if (!arr1 || !arr2) return false;
-                // Handle cases where output might not be an array (e.g. single value, or error)
                 if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
-                    return String(arr1) === String(arr2); // Simple string comparison if not arrays
+                    return String(arr1) === String(arr2);
                 }
                 if (arr1.length === 0 && arr2.length === 0) return true;
                 if (arr1.length !== arr2.length) return false;
 
-                // Create sorted copies for comparison to handle order differences
                 const sortedArr1 = [...arr1].sort((a, b) =>
                     JSON.stringify(a).localeCompare(JSON.stringify(b)),
                 );
@@ -854,9 +655,9 @@
                                     text: text,
                                 });
 
-                            await pyodide.runPythonAsync(userCode); // Load user's function definition
+                            await pyodide.runPythonAsync(userCode);
                             const solutionFunc =
-                                pyodide.globals.get("function"); // Always 'function'
+                                pyodide.globals.get("function");
 
                             if (typeof solutionFunc !== "function") {
                                 throw new Error(
@@ -864,7 +665,6 @@
                                 );
                             }
 
-                            // Prepare arguments for the Python function
                             const pyFuncArgs =
                                 currentQuestionData.function_params_names.map(
                                     (paramName) => {
@@ -877,7 +677,6 @@
                                                 testCase.input[paramName],
                                             );
                                         }
-                                        // If a param is defined in JSON but not in test case input, pass None/null
                                         console.warn(
                                             `Parameter '${paramName}' not found in test case input for test ${testCase.id}. Passing None.`,
                                         );
@@ -889,7 +688,7 @@
 
                             result =
                                 pyResult && typeof pyResult.toJs === "function"
-                                    ? pyResult.toJs({ create_proxies: false }) // Make sure to turn off proxies for complex objects
+                                    ? pyResult.toJs({ create_proxies: false })
                                     : pyResult;
                             if (
                                 pyResult &&
@@ -897,7 +696,6 @@
                             ) {
                                 pyResult.destroy();
                             }
-                            // Destroy PyProxy arguments if they exist
                             pyFuncArgs.forEach((arg) => {
                                 if (arg && typeof arg.destroy === "function") {
                                     arg.destroy();
@@ -918,7 +716,7 @@
                     } catch (error) {
                         currentTestLogEntries.push({
                             type: "error",
-                            text: `Runtime Error: ${error.message}${error.stack ? `\nStack: ${error.stack.split("\n").slice(0, 5).join("\n")}` : ""}`, // Limit stack trace
+                            text: `Runtime Error: ${error.message}${error.stack ? `\nStack: ${error.stack.split("\n").slice(0, 5).join("\n")}` : ""}`,
                         });
                         actualOutputStr = `Error: ${error.message}`;
                         currentTestPassed = false;
@@ -973,7 +771,7 @@
                     ? "text-green-600"
                     : currentTestCases.length > 0
                       ? "text-red-600"
-                      : "text-blue-700"; // Should be yellow if no test cases ran
+                      : "text-blue-700";
 
                 if (allPassed) {
                     appendToConsole(
@@ -984,7 +782,6 @@
                         `<span class="${finalStatusColor} font-semibold">Some tests failed.</span>`,
                     );
                 } else {
-                    // This case should be handled earlier
                     appendToConsole(
                         `<span class="text-blue-700">No test cases were run.</span>`,
                     );
@@ -1015,7 +812,7 @@
                         return;
                     }
 
-                    const problemPaneBasis = availableWidthForPanes * 0.4; // Adjusted for more problem text space
+                    const problemPaneBasis = availableWidthForPanes * 0.4;
                     const rightContainerBasis =
                         availableWidthForPanes - problemPaneBasis;
 
@@ -1062,25 +859,24 @@
                     questionId.trim() === "" ||
                     isNaN(parseInt(questionId))
                 ) {
-                    questionId = "0"; // Default to 0
+                    questionId = "0";
                     const newUrl = `${window.location.pathname}?q=${questionId}${window.location.hash}`;
-                    window.history.replaceState({ path: newUrl }, "", newUrl); // Update URL without reload
+                    window.history.replaceState({ path: newUrl }, "", newUrl);
                 }
 
                 setInitialLayout();
-                loadQuestionData(questionId); // Load data based on URL param
-                initializePyodide(); // Initialize Pyodide
+                loadQuestionData(questionId);
+                initializePyodide();
 
                 window.addEventListener("resize", () => {
                     setInitialLayout();
                 });
-                setTimeout(updateLineNumbers, 100); // Final line number update
+                setTimeout(updateLineNumbers, 100);
             });
 
-            // Listen for URL changes (e.g., browser back/forward) if you want to reload content
             window.addEventListener("popstate", (event) => {
                 const urlParams = new URLSearchParams(window.location.search);
-                let questionId = urlParams.get("q") || "0"; // Default to 0 if 'q' is missing after popstate
+                let questionId = urlParams.get("q") || "0";
                 loadQuestionData(questionId);
             });
         </script>
