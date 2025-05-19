@@ -108,9 +108,6 @@
                 "console-output-container",
             );
             const consoleSummaryEl = document.getElementById("console-summary");
-            // const pyodideLoadingStatus = document.getElementById( // Removed
-            //  "pyodide-loading-status",
-            // );
             const problemTitleElement =
                 document.getElementById("problem-title");
             const problemTextContainer = document.getElementById(
@@ -312,22 +309,12 @@
             let currentTestCases = [];
             let currentQuestionData = null;
 
-            function updateEditorWithPythonBoilerplate(
-                paramNames = ["nums", "target"],
-            ) {
+            function updateEditorWithPythonBoilerplate(paramNames) {
                 const functionSignature = `def function(${paramNames.join(", ")}):`;
-                const pythonBoilerplate = `${functionSignature}
-    # Your solution here
-    # Example: print(f"Processing ${paramNames[0]}: {${paramNames[0]}}")
-    print("Hello from function!")
-    return []
-`;
+                const pythonBoilerplate = `${functionSignature}`;
                 codeEditor.value = pythonBoilerplate;
                 updateLineNumbers();
                 runCodeBtn.disabled = !pyodideReady;
-                // pyodideLoadingStatus.style.display = pyodideReady // Removed
-                //  ? "none"
-                //  : "block";
             }
 
             function clearConsole() {
@@ -357,7 +344,6 @@
 
             async function initializePyodide() {
                 runCodeBtn.disabled = true;
-                // pyodideLoadingStatus.style.display = "block"; // Removed
                 try {
                     pyodide = await loadPyodide({
                         stdout: (text) => {
@@ -385,23 +371,17 @@
                         `<span class="text-blue-700">Python environment ready.</span>`,
                     );
                     pyodideReady = true;
-                    // runCodeBtn.disabled = false; // Already handled by updateEditorWithPythonBoilerplate or later logic
                     if (currentQuestionData) {
                         runCodeBtn.disabled = false;
                     } else {
-                        runCodeBtn.disabled = true; // Keep disabled if no question yet
+                        runCodeBtn.disabled = true;
                     }
                 } catch (error) {
                     console.error("Failed to load Pyodide:", error);
                     appendToConsole(
                         `<span class="text-red-700">Error loading Pyodide: ${escapeHTML(error.message)}</span>`,
                     );
-                    // pyodideLoadingStatus.textContent = // Removed
-                    //  "Failed to load Python environment.";
-                    // pyodideLoadingStatus.style.color = "#EF4444"; // Removed
                     runCodeBtn.disabled = true;
-                } finally {
-                    // pyodideLoadingStatus.style.display = "none"; // Removed
                 }
             }
 
@@ -539,7 +519,7 @@
                         ? `Q${questionId}: ${data.title}`
                         : `Question ${questionId}`;
                     problemTextContainer.innerHTML = parseDescriptionToHtml(
-                        data.Description,
+                        data.description,
                     );
 
                     currentTestCases = data.test_cases || [];
