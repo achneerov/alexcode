@@ -1,3 +1,24 @@
-<app-description></app-description>
-<app-ide></app-ide>
-<app-console></app-console>
+<as-split direction="horizontal" [gutterSize]="8" unit="percent">
+  <!-- Left: Description -->
+  <as-split-area [size]="50" minSize="20">
+    <div class="pane description">
+      <app-description></app-description>
+    </div>
+  </as-split-area>
+
+  <!-- Right: IDE (top) and Console (bottom) -->
+  <as-split-area [size]="50" minSize="20">
+    <as-split direction="vertical" [gutterSize]="8" unit="percent">
+      <as-split-area [size]="50" minSize="20">
+        <div class="pane ide">
+          <app-ide></app-ide>
+        </div>
+      </as-split-area>
+      <as-split-area [size]="50" minSize="20">
+        <div class="pane console">
+          <app-console></app-console>
+        </div>
+      </as-split-area>
+    </as-split>
+  </as-split-area>
+</as-split>
