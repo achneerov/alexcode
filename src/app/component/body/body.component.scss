@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  flex: 1;
+  overflow: auto;
+}
+
+.pane {
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 5px solid rgba(128, 128, 128, 0.3);  // semi-transparent grey border
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);  // slightly transparent white background
+}
+
+// Specific styling for each pane if needed
+.description {
+  // Add specific styles for description pane
+}
+
+.ide {
+  // Add specific styles for IDE pane
+}
+
+.console {
+  // Add specific styles for console pane
+}
