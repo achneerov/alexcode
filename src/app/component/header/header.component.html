@@ -1,9 +1,7 @@
 <mat-toolbar color="primary">
   <button mat-flat-button color="accent">Go to Problem</button>
-  <mat-form-field appearance="outline">
-    <input matInput placeholder="Search..." [(ngModel)]="searchText">
-  </mat-form-field>
-  <span class="spacer"></span>
-
-  <button mat-flat-button color="accent">Run Code</button>
+  <input placeholder="Search..." [(ngModel)]="searchText">
+  <div class="spacer"></div>
+  <button mat-flat-button class="custom-green-button">Run Code</button>
+  <div class="spacer"></div>
 </mat-toolbar>

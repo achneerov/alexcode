@@ -1,14 +1,21 @@
-:host {
-  display: block;
-}
-
 mat-toolbar {
   display: flex;
   align-items: center;
+  gap: 16px;
   padding: 0 16px;
-  width: 100%;
+}
+
+input {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .spacer {
-  flex: 1 1 auto;
+  flex: 1;
+}
+
+.custom-green-button {
+  background-color: green !important;
 }
