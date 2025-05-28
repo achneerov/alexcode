@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  flex: 1;
+  overflow: auto;
+}
+
+.pane {
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 5px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+::ng-deep .as-split-gutter { background-color: transparent !important; }

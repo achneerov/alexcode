@@ -1,0 +1,56 @@
+{
+  "title": "Product of Array except self",
+  "description": "Given an integer array `nums`, return an array `output` where `output[i]` is the product of all the elements of `nums` except `nums[i]`. Each product is guaranteed to fit in a 32-bit integer. \n\nFor example:\n- If `nums = [1,2,4,6]`, the output should be `[48,24,12,8]`.\n- If `nums = [-1,0,1,2,3]`, the output should be `[0,-6,0,0,0]`.\n\nFollow-up: Could you solve it in O(n) time without using the division operation?",
+  "function_params_names": ["nums"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "nums": [1, 2, 4, 6]
+      },
+      "output": [48, 24, 12, 8]
+    },
+    {
+      "id": 2,
+      "input": {
+        "nums": [-1, 0, 1, 2, 3]
+      },
+      "output": [0, -6, 0, 0, 0]
+    },
+    {
+      "id": 3,
+      "input": {
+        "nums": [1, 2, 3, 4, 5]
+      },
+      "output": [120, 60, 40, 30, 24]
+    },
+    {
+      "id": 4,
+      "input": {
+        "nums": [0, 0, 1, 2]
+      },
+      "output": [0, 0, 0, 0]
+    },
+    {
+      "id": 5,
+      "input": {
+        "nums": [-1, -1, -1, -1]
+      },
+      "output": [-1, -1, -1, -1]
+    },
+    {
+      "id": 6,
+      "input": {
+        "nums": [10]
+      },
+      "output": [1]
+    },
+    {
+      "id": 7,
+      "input": {
+        "nums": [1, 0]
+      },
+      "output": [0, 1]
+    }
+  ]
+}
