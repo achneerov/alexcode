@@ -76,4 +76,105 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
   }
+
+  onKeyDown(event: KeyboardEvent): void {
+    // Handle Cmd+Enter to run code - must be checked first
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      this.runCode();
+      return; // Stop processing after running code
+    }
+
+    // Handle intelligent indentation when Enter is pressed
+    if (event.key === "Enter") {
+      this.handleEnterKey(event);
+    }
+
+    // Handle Cmd+? (or Cmd+/) for comment toggling
+    if (
+      (event.key === "?" || event.key === "/") &&
+      (event.metaKey || event.ctrlKey)
+    ) {
+      event.preventDefault();
+      this.toggleComments();
+    }
+  }
+
+  private handleEnterKey(event: KeyboardEvent): void {
+    event.preventDefault();
+
+    const textarea = event.target as HTMLTextAreaElement;
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+
+    // Get current line up to cursor position
+    const textBeforeCursor = this.code.substring(0, selectionStart);
+    const textAfterCursor = this.code.substring(selectionEnd);
+    const currentLine = textBeforeCursor.split("\n").pop() || "";
+
+    // Calculate indentation
+    const currentIndentation = this.getIndentation(currentLine);
+    let newIndentation = currentIndentation;
+
+    // Increase indentation if line ends with ':'
+    if (currentLine.trimEnd().endsWith(":")) {
+      newIndentation += "    "; // Add 4 spaces for new indentation level
+    }
+
+    // Insert new line with proper indentation
+    this.code = textBeforeCursor + "\n" + newIndentation + textAfterCursor;
+
+    // Set cursor position after the indentation
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd =
+        selectionStart + 1 + newIndentation.length;
+    });
+  }
+
+  private getIndentation(line: string): string {
+    const match = line.match(/^(\s*)/);
+    return match ? match[1] : "";
+  }
+
+  private toggleComments(): void {
+    // Get selected text or use the whole code
+    const textarea = document.querySelector(
+      ".ide-textarea",
+    ) as HTMLTextAreaElement;
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+
+    // Split into lines
+    const lines = this.code.split("\n");
+
+    // Determine line range to affect
+    let startLine =
+      this.code.substring(0, selectionStart).split("\n").length - 1;
+    let endLine = this.code.substring(0, selectionEnd).split("\n").length - 1;
+
+    // Check if all selected lines are commented
+    const allCommented = lines
+      .slice(startLine, endLine + 1)
+      .every((line) => line.trimStart().startsWith("#"));
+
+    // Toggle comments for each line
+    const newLines = [...lines];
+    for (let i = startLine; i <= endLine; i++) {
+      if (allCommented) {
+        // Remove comment
+        const firstHashIndex = newLines[i].indexOf("#");
+        if (firstHashIndex !== -1) {
+          newLines[i] =
+            newLines[i].substring(0, firstHashIndex) +
+            newLines[i].substring(firstHashIndex + 1);
+        }
+      } else {
+        // Add comment
+        newLines[i] = "# " + newLines[i];
+      }
+    }
+
+    // Update code
+    this.code = newLines.join("\n");
+  }
 }

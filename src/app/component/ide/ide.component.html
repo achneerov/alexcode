@@ -1,1 +1,5 @@
-<textarea class="ide-textarea" [(ngModel)]="code"></textarea>
+<textarea
+  class="ide-textarea"
+  [(ngModel)]="code"
+  (keydown)="onKeyDown($event)"
+></textarea>
