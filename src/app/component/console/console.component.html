@@ -1,1 +1,11 @@
-<p>console works!</p>
+<div class="console-container">
+  <div class="console-header">
+    <h3>Console</h3>
+    <button mat-button (click)="clearConsole()">Clear</button>
+  </div>
+  <div class="console-output">
+    <div *ngFor="let line of consoleOutput" class="console-line">
+      {{ line }}
+    </div>
+  </div>
+</div>

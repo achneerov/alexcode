@@ -1,7 +1,9 @@
 <mat-toolbar color="primary">
   <button mat-flat-button color="accent">Go to Problem</button>
-  <input placeholder="Search..." [(ngModel)]="searchText">
+  <input placeholder="Search..." [(ngModel)]="searchText" />
   <div class="spacer"></div>
-  <button mat-flat-button class="custom-green-button">Run Code</button>
+  <button mat-flat-button class="custom-green-button" (click)="runCode()">
+    Run Code
+  </button>
   <div class="spacer"></div>
 </mat-toolbar>
