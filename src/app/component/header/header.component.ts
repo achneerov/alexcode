@@ -4,6 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { CodeExecutionService } from "../../service/code-execution.service";
 
 @Component({
@@ -22,9 +23,25 @@ import { CodeExecutionService } from "../../service/code-execution.service";
 export class HeaderComponent {
   searchText: string = "";
 
-  constructor(private codeExecutionService: CodeExecutionService) {}
+  constructor(
+    private codeExecutionService: CodeExecutionService,
+    private router: Router,
+  ) {}
 
   runCode(): void {
     this.codeExecutionService.triggerRunCode();
+  }
+
+  goToProblem(): void {
+    // Default to problem 0 if searchText is empty
+    const problemId = this.searchText ? this.searchText : "0";
+    this.router.navigate(["/problem", problemId]);
+  }
+
+  // Handle Enter key in search input
+  onSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === "Enter") {
+      this.goToProblem();
+    }
   }
 }

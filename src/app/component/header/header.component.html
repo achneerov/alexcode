@@ -1,6 +1,12 @@
 <mat-toolbar color="primary">
-  <button mat-flat-button color="accent">Go to Problem</button>
-  <input placeholder="Search..." [(ngModel)]="searchText" />
+  <button mat-flat-button color="accent" (click)="goToProblem()">
+    Go to Problem
+  </button>
+  <input
+    placeholder="Search..."
+    [(ngModel)]="searchText"
+    (keydown)="onSearchKeydown($event)"
+  />
   <div class="spacer"></div>
   <button mat-flat-button class="custom-green-button" (click)="runCode()">
     Run Code
