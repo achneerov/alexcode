@@ -1,3 +1,9 @@
 <div class="console-output">
-  <div *ngFor="let line of consoleOutput" class="console-line">{{ line }}</div>
+  <div
+    *ngFor="let line of consoleOutput"
+    class="console-line"
+    [ngClass]="line.type"
+  >
+    {{ line.text }}
+  </div>
 </div>

@@ -9,13 +9,20 @@ declare global {
   }
 }
 
+export interface ConsoleOutputLine {
+  text: string;
+  type: "info" | "success" | "error" | "print" | "header";
+}
+
 @Injectable({
   providedIn: "root",
 })
 export class PyodideService {
   private pyodide: any;
   private pyodideLoading: Promise<any> | null = null;
-  private consoleOutput = new BehaviorSubject<string[]>([]);
+  private consoleOutput = new BehaviorSubject<ConsoleOutputLine[]>([]);
+  private printBuffer: string[] = [];
+  private currentTestCase: number = -1;
 
   constructor() {
     // Start loading Pyodide immediately when service is created
@@ -23,19 +30,39 @@ export class PyodideService {
   }
 
   // Get the console output as an observable
-  getConsoleOutput(): Observable<string[]> {
+  getConsoleOutput(): Observable<ConsoleOutputLine[]> {
     return this.consoleOutput.asObservable();
   }
 
   // Clear the console output
   clearConsoleOutput(): void {
     this.consoleOutput.next([]);
+    this.printBuffer = [];
+    this.currentTestCase = -1;
   }
 
   // Add a line to the console output
-  private addConsoleOutput(text: string): void {
+  private addConsoleOutput(
+    text: string,
+    type: "info" | "success" | "error" | "print" | "header" = "info",
+  ): void {
     const current = this.consoleOutput.value;
-    this.consoleOutput.next([...current, text]);
+    this.consoleOutput.next([...current, { text, type }]);
+  }
+
+  // Buffer print statements until a test case is completed
+  private bufferPrint(text: string): void {
+    this.printBuffer.push(text);
+  }
+
+  // Flush print buffer to console
+  private flushPrintBuffer(): void {
+    if (this.printBuffer.length > 0) {
+      for (const line of this.printBuffer) {
+        this.addConsoleOutput(line, "print");
+      }
+      this.printBuffer = [];
+    }
   }
 
   // Load Pyodide once
@@ -49,22 +76,25 @@ export class PyodideService {
       this.pyodideLoading = new Promise((resolve, reject) => {
         script.onload = async () => {
           try {
-            this.addConsoleOutput("Loading Pyodide...");
+            this.addConsoleOutput("Loading Pyodide...", "info");
             this.pyodide = await window.loadPyodide({
               indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/",
             });
             this.setupPyodideEnvironment();
-            this.addConsoleOutput("Pyodide loaded successfully!");
+            this.addConsoleOutput("Pyodide loaded successfully!", "info");
             resolve(this.pyodide);
           } catch (error) {
             const errorMessage =
               error instanceof Error ? error.message : String(error);
-            this.addConsoleOutput(`Error loading Pyodide: ${errorMessage}`);
+            this.addConsoleOutput(
+              `Error loading Pyodide: ${errorMessage}`,
+              "error",
+            );
             reject(error);
           }
         };
         script.onerror = (error) => {
-          this.addConsoleOutput("Failed to load Pyodide script.");
+          this.addConsoleOutput("Failed to load Pyodide script.", "error");
           reject(error);
         };
       });
@@ -85,20 +115,20 @@ export class PyodideService {
           end = kwargs.get('end', '\\n')
           output = sep.join(str(arg) for arg in args) + end
           # Send to JavaScript
-          js_add_console_output(output.rstrip('\\n'))
+          js_buffer_print(output.rstrip('\\n'))
 
-      sys.stdout.write = custom_print
-      sys.stderr.write = custom_print
+      sys.stdout.write = lambda x: js_buffer_print(x)
+      sys.stderr.write = lambda x: js_buffer_print(x)
       __builtins__.print = custom_print
     `);
 
-    // Create a JavaScript function to add output to our console
-    const addConsoleOutputProxy = this.pyodide.toPy((text: string) => {
-      this.addConsoleOutput(text);
+    // Create a JavaScript function to buffer output
+    const bufferPrintProxy = this.pyodide.toPy((text: string) => {
+      this.bufferPrint(text);
     });
 
     // Make it available to Python
-    this.pyodide.globals.set("js_add_console_output", addConsoleOutputProxy);
+    this.pyodide.globals.set("js_buffer_print", bufferPrintProxy);
   }
 
   // Run a Python function with test cases
@@ -110,20 +140,37 @@ export class PyodideService {
     return from(this.loadPyodide()).pipe(
       switchMap(() => {
         try {
+          const startTime = performance.now();
+
           // Run the user's code to define the function
           this.pyodide.runPython(code);
 
           const results = [];
 
+          const endTime = performance.now();
+          const executionTime = (endTime - startTime).toFixed(2);
+          this.addConsoleOutput(
+            `⏱️ Code execution time: ${executionTime}ms`,
+            "header",
+          );
+
           // Run each test case
-          for (const testCase of testCases) {
+          for (let i = 0; i < testCases.length; i++) {
+            const testCase = testCases[i];
+            this.currentTestCase = i;
+
             try {
+              // Reset print buffer for this test case
+              this.printBuffer = [];
+
+              // Add test case header
+              this.addConsoleOutput(`----- Test Case ${i + 1} -----`, "header");
+
               // Convert input to a format Python can use
               const inputArgs = this.convertInputToArgs(testCase.input);
 
               // Create the function call
               const functionCall = `${functionName}(${inputArgs})`;
-              this.addConsoleOutput(`Running: ${functionCall}`);
 
               // Execute the function
               const result = this.pyodide.runPython(functionCall);
@@ -131,20 +178,51 @@ export class PyodideService {
               // Convert to JavaScript value
               const jsResult = result.toJs();
 
+              // First flush any print statements
+              this.flushPrintBuffer();
+
+              // Now add the function call details
+              this.addConsoleOutput(`Input: ${functionCall}`, "info");
+              this.addConsoleOutput(
+                `Expected: ${JSON.stringify(testCase.output)}`,
+                "info",
+              );
+
+              const passed = this.compareResults(jsResult, testCase.output);
+              // Add the result with appropriate styling
+              if (passed) {
+                this.addConsoleOutput(
+                  `Output: ${JSON.stringify(jsResult)} ✅`,
+                  "success",
+                );
+              } else {
+                this.addConsoleOutput(
+                  `Output: ${JSON.stringify(jsResult)} ❌`,
+                  "error",
+                );
+              }
+
               // Add to results
               results.push({
                 input: testCase.input,
                 expected: testCase.output,
                 result: jsResult,
-                passed: this.compareResults(jsResult, testCase.output),
+                passed,
               });
-
-              this.addConsoleOutput(`Result: ${JSON.stringify(jsResult)}`);
             } catch (testErr) {
               // Fix: Properly handle the unknown type
               const testError =
                 testErr instanceof Error ? testErr.message : String(testErr);
-              this.addConsoleOutput(`Error in test case: ${testError}`);
+
+              // Flush any print statements first
+              this.flushPrintBuffer();
+
+              // Add the error information
+              this.addConsoleOutput(
+                `Error in test case: ${testError}`,
+                "error",
+              );
+
               results.push({
                 input: testCase.input,
                 expected: testCase.output,
@@ -154,18 +232,19 @@ export class PyodideService {
             }
           }
 
+          this.currentTestCase = -1;
           return of(results);
         } catch (err) {
           // Fix: Properly handle the unknown type
           const error = err instanceof Error ? err.message : String(err);
-          this.addConsoleOutput(`Error executing code: ${error}`);
+          this.addConsoleOutput(`Error executing code: ${error}`, "error");
           return of([{ error: error, passed: false }]);
         }
       }),
       catchError((err) => {
         // Fix: Properly handle the unknown type
         const error = err instanceof Error ? err.message : String(err);
-        this.addConsoleOutput(`Service error: ${error}`);
+        this.addConsoleOutput(`Service error: ${error}`, "error");
         return of([{ error: error, passed: false }]);
       }),
     );

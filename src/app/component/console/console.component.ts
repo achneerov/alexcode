@@ -1,5 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { PyodideService } from "../../service/pyodide.service";
+import {
+  PyodideService,
+  ConsoleOutputLine,
+} from "../../service/pyodide.service";
 import { Subscription } from "rxjs";
 import { CommonModule } from "@angular/common";
 
@@ -11,7 +14,7 @@ import { CommonModule } from "@angular/common";
   styleUrl: "./console.component.scss",
 })
 export class ConsoleComponent implements OnInit, OnDestroy {
-  consoleOutput: string[] = [];
+  consoleOutput: ConsoleOutputLine[] = [];
   private subscription: Subscription | null = null;
 
   constructor(private pyodideService: PyodideService) {}

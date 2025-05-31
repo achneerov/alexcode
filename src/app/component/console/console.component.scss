@@ -21,4 +21,31 @@
 .console-line {
   white-space: pre-wrap;
   margin-bottom: 4px;
+  font-family: "Courier New", monospace;
+}
+
+/* Line type styling */
+.info {
+  color: #333;
+}
+
+.success {
+  color: #2e7d32; /* Material green */
+  font-weight: bold;
+}
+
+.error {
+  color: #c62828; /* Material red */
+  font-weight: bold;
+}
+
+.print {
+  color: #0277bd; /* Material blue */
+}
+
+.header {
+  color: #6a1b9a; /* Material purple */
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
