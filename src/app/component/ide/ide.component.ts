@@ -58,7 +58,7 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
   generateFunctionTemplate(): string {
     if (this.problemData && this.problemData.function_params_names) {
       const paramList = this.problemData.function_params_names.join(", ");
-      return `def function(${paramList}):\n    # Your code here\n    pass`;
+      return `def function(${paramList}):`;
     }
     return "";
   }
