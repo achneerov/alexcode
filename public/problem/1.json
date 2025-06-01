@@ -1,6 +1,6 @@
 {
   "title": "Product of Array except self",
-  "description": "Given an integer array `nums`, return an array `output` where `output[i]` is the product of all the elements of `nums` except `nums[i]`. Each product is guaranteed to fit in a 32-bit integer. \n\nFor example:\n- If `nums = [1,2,4,6]`, the output should be `[48,24,12,8]`.\n- If `nums = [-1,0,1,2,3]`, the output should be `[0,-6,0,0,0]`.\n\nFollow-up: Could you solve it in O(n) time without using the division operation?",
+  "description": "<h3>Problem</h3><p>Given an integer array <code>nums</code>, return an array <code>output</code> where <code>output[i]</code> is the product of all the elements of <code>nums</code> except <code>nums[i]</code>. Each product is guaranteed to fit in a 32-bit integer.</p><h3>Examples:</h3><ul><li>If <code>nums = [1,2,4,6]</code>, the output should be <code>[48,24,12,8]</code>.</li><li>If <code>nums = [-1,0,1,2,3]</code>, the output should be <code>[0,-6,0,0,0]</code>.</li></ul><h3>Follow-up:</h3><p>Could you solve it in O(n) time without using the division operation?</p>",
   "function_params_names": ["nums"],
   "test_cases": [
     {
