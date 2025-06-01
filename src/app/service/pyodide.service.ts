@@ -140,22 +140,15 @@ export class PyodideService {
     return from(this.loadPyodide()).pipe(
       switchMap(() => {
         try {
-          const startTime = performance.now();
-
           // Run the user's code to define the function
           this.pyodide.runPython(code);
 
           const results = [];
-
-          const endTime = performance.now();
-          const executionTime = (endTime - startTime).toFixed(2);
-          this.addConsoleOutput(
-            `⏱️ Code execution time: ${executionTime}ms`,
-            "header",
-          );
-
           let passedTests = 0;
           const totalTests = testCases.length;
+
+          // Start timing the test execution
+          const startTime = performance.now();
 
           // Run each test case
           for (let i = 0; i < testCases.length; i++) {
@@ -236,13 +229,33 @@ export class PyodideService {
             }
           }
 
+          // End timing after all test cases have been run
+          const endTime = performance.now();
+          const executionTime = (endTime - startTime).toFixed(2);
+
           this.currentTestCase = -1;
 
-          // Add test results summary
-          this.addConsoleOutput(
-            `📊 Test Results: ${passedTests}/${totalTests} tests passed`,
-            "header",
-          );
+          // Get current console output
+          const currentOutput = this.consoleOutput.value;
+
+          // Create summary messages
+          const executionTimeLine: ConsoleOutputLine = {
+            text: `⏱️ Test execution time: ${executionTime}ms`,
+            type: "header",
+          };
+
+          const resultsLine: ConsoleOutputLine = {
+            text: `📊 Test Results: ${passedTests}/${totalTests} tests passed`,
+            type: "header",
+          };
+
+          // Insert summary at the beginning of the console output
+          const updatedOutput = [
+            executionTimeLine,
+            resultsLine,
+            ...currentOutput,
+          ];
+          this.consoleOutput.next(updatedOutput);
 
           return of(results);
         } catch (err) {
