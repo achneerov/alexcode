@@ -154,6 +154,9 @@ export class PyodideService {
             "header",
           );
 
+          let passedTests = 0;
+          const totalTests = testCases.length;
+
           // Run each test case
           for (let i = 0; i < testCases.length; i++) {
             const testCase = testCases[i];
@@ -195,6 +198,7 @@ export class PyodideService {
                   `Output: ${JSON.stringify(jsResult)} ✅`,
                   "success",
                 );
+                passedTests++;
               } else {
                 this.addConsoleOutput(
                   `Output: ${JSON.stringify(jsResult)} ❌`,
@@ -233,6 +237,13 @@ export class PyodideService {
           }
 
           this.currentTestCase = -1;
+
+          // Add test results summary
+          this.addConsoleOutput(
+            `📊 Test Results: ${passedTests}/${totalTests} tests passed`,
+            "header",
+          );
+
           return of(results);
         } catch (err) {
           // Fix: Properly handle the unknown type
