@@ -1,6 +1,6 @@
 export interface Problem {
-  title: string;
   description: string;
+  solution?: string;
   function_params_names: string[];
   test_cases: TestCase[];
 }

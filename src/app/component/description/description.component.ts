@@ -13,15 +13,26 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 export class DescriptionComponent implements OnChanges {
   @Input() problemData: Problem | undefined;
   sanitizedDescription: SafeHtml = "";
+  sanitizedSolution: SafeHtml = "";
+  activeTab: "description" | "solution" = "description";
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // When problemData changes, sanitize the HTML description
-    if (this.problemData && this.problemData.description) {
-      this.sanitizedDescription = this.sanitizer.bypassSecurityTrustHtml(
-        this.problemData.description,
-      );
+    if (this.problemData) {
+      // Sanitize description HTML
+      if (this.problemData.description) {
+        this.sanitizedDescription = this.sanitizer.bypassSecurityTrustHtml(
+          this.problemData.description,
+        );
+      }
+
+      // Sanitize solution HTML if available
+      if (this.problemData.solution) {
+        this.sanitizedSolution = this.sanitizer.bypassSecurityTrustHtml(
+          this.problemData.solution,
+        );
+      }
     }
   }
 }

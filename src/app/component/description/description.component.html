@@ -1,4 +1,32 @@
 <div class="problem-description-scroll">
-  <h3 class="problem-title">{{ problemData?.title }}</h3>
-  <div class="problem-description" [innerHTML]="sanitizedDescription"></div>
+  <div class="tabs">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'description'"
+      (click)="activeTab = 'description'"
+    >
+      Description
+    </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'solution'"
+      (click)="activeTab = 'solution'"
+      *ngIf="problemData?.solution"
+    >
+      Solution
+    </div>
+  </div>
+
+  <div class="content-container">
+    <div
+      class="problem-description"
+      [innerHTML]="sanitizedDescription"
+      *ngIf="activeTab === 'description'"
+    ></div>
+    <div
+      class="problem-solution"
+      [innerHTML]="sanitizedSolution"
+      *ngIf="activeTab === 'solution'"
+    ></div>
+  </div>
 </div>
