@@ -1,49 +1,80 @@
 {
-  "description": "<h2>Reverse Integer</h2><h3>Problem</h3><p>Given a signed 32-bit integer <code>x</code>, return <code>x</code> with its digits reversed. If reversing <code>x</code> causes the value to go outside the signed 32-bit integer range <code>[-2^31, 2^31 - 1]</code>, then return <code>0</code>.</p><p>Assume the environment does not allow you to store 64-bit integers (signed or unsigned).</p><h3>Examples:</h3><ul><li>If <code>x = 123</code>, the output should be <code>321</code>.</li><li>If <code>x = -123</code>, the output should be <code>-321</code>.</li><li>If <code>x = 120</code>, the output should be <code>21</code>.</li><li>If <code>x = 0</code>, the output should be <code>0</code>.</li></ul>",
-  "solution": "<p>To reverse an integer, we can repeatedly extract the last digit and add it to our result:</p><pre><code>def function(x):\n    # Handle negative numbers\n    sign = 1\n    if x < 0:\n        sign = -1\n        x = abs(x)\n    \n    # Reverse the digits\n    result = 0\n    while x > 0:\n        # Extract the last digit\n        last_digit = x % 10\n        \n        # Add to result\n        result = result * 10 + last_digit\n        \n        # Remove the last digit from x\n        x = x // 10\n    \n    # Apply sign\n    result = sign * result\n    \n    # Check for 32-bit integer overflow\n    if result < -2**31 or result > 2**31 - 1:\n        return 0\n    \n    return result</code></pre>",
-  "function_params_names": ["x"],
+  "description": "<h2>Group Anagrams</h2><h3>Problem</h3><p>Given an array of strings <code>strs</code>, group the anagrams together. You can return the answer in any order.</p><p>An <strong>anagram</strong> is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.</p><h3>Examples:</h3><ul><li>If <code>strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]</code>, the output should be <code>[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]</code>.</li><li>If <code>strs = [\"\"]</code>, the output should be <code>[[\"\"]]</code>.</li><li>If <code>strs = [\"a\"]</code>, the output should be <code>[[\"a\"]]</code>.</li></ul>",
+  "solution": "<p>The most efficient approach uses a hash map where the key is a sorted version of each string:</p><pre><code>def function(strs):\n    # Create a dictionary to group anagrams\n    anagram_groups = {}\n    \n    # Iterate through each string in the input array\n    for s in strs:\n        # Sort the string to use as key\n        # Since anagrams will have the same sorted string\n        sorted_str = ''.join(sorted(s))\n        \n        # If we've seen this sorted string before, add the original\n        # string to its group\n        if sorted_str in anagram_groups:\n            anagram_groups[sorted_str].append(s)\n        # Otherwise, create a new group\n        else:\n            anagram_groups[sorted_str] = [s]\n    \n    # Return the values (groups of anagrams) as a list\n    return list(anagram_groups.values())</code></pre>",
+  "function_params_names": ["strs"],
   "test_cases": [
     {
       "id": 1,
       "input": {
-        "x": 123
+        "strs": ["eat", "tea", "tan", "ate", "nat", "bat"]
       },
-      "output": 321
+      "output": [["bat"], ["nat", "tan"], ["ate", "eat", "tea"]]
     },
     {
       "id": 2,
       "input": {
-        "x": -123
+        "strs": [""]
       },
-      "output": -321
+      "output": [[""]]
     },
     {
       "id": 3,
       "input": {
-        "x": 120
+        "strs": ["a"]
       },
-      "output": 21
+      "output": [["a"]]
     },
     {
       "id": 4,
       "input": {
-        "x": 0
+        "strs": ["abc", "cba", "def"]
       },
-      "output": 0
+      "output": [["abc", "cba"], ["def"]]
     },
     {
       "id": 5,
       "input": {
-        "x": 1534236469
+        "strs": ["abets", "baste", "betas", "beast", "beats"]
       },
-      "output": 0
+      "output": [["abets", "baste", "betas", "beast", "beats"]]
     },
     {
       "id": 6,
       "input": {
-        "x": -2147483648
+        "strs": ["z", "z"]
       },
-      "output": 0
+      "output": [["z", "z"]]
+    },
+    {
+      "id": 7,
+      "input": {
+        "strs": ["abc", "def", "ghi"]
+      },
+      "output": [["abc"], ["def"], ["ghi"]]
+    },
+    {
+      "id": 8,
+      "input": {
+        "strs": ["cat", "dog", "act", "god"]
+      },
+      "output": [
+        ["cat", "act"],
+        ["dog", "god"]
+      ]
+    },
+    {
+      "id": 9,
+      "input": {
+        "strs": ["cinema", "iceman", "anemic"]
+      },
+      "output": [["cinema", "iceman", "anemic"]]
+    },
+    {
+      "id": 10,
+      "input": {
+        "strs": ["listen", "silent", "enlist"]
+      },
+      "output": [["listen", "silent", "enlist"]]
     }
   ]
 }

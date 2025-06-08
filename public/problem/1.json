@@ -1,56 +1,87 @@
 {
-  "description": "<h2>Product of Array except self</h2><h3>Problem</h3><p>Given an integer array <code>nums</code>, return an array <code>output</code> where <code>output[i]</code> is the product of all the elements of <code>nums</code> except <code>nums[i]</code>. Each product is guaranteed to fit in a 32-bit integer.</p><h3>Examples:</h3><ul><li>If <code>nums = [1,2,4,6]</code>, the output should be <code>[48,24,12,8]</code>.</li><li>If <code>nums = [-1,0,1,2,3]</code>, the output should be <code>[0,-6,0,0,0]</code>.</li></ul><h3>Follow-up:</h3><p>Could you solve it in O(n) time without using the division operation?</p>",
-  "solution": "<p>The most efficient approach uses two passes through the array to calculate products without division:</p><pre><code>def function(nums):\n    n = len(nums)\n    output = [1] * n\n    \n    # First pass: calculate product of all elements to the left\n    left_product = 1\n    for i in range(n):\n        output[i] = left_product\n        left_product *= nums[i]\n    \n    # Second pass: multiply by product of all elements to the right\n    right_product = 1\n    for i in range(n-1, -1, -1):\n        output[i] *= right_product\n        right_product *= nums[i]\n    \n    return output</code></pre>",
-  "function_params_names": ["nums"],
+  "description": "<h2>Valid Anagram</h2><h3>Problem</h3><p>Given two strings <code>s</code> and <code>t</code>, return <code>true</code> if <code>t</code> is an anagram of <code>s</code>, and <code>false</code> otherwise.</p><p>An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.</p><h3>Examples:</h3><ul><li>If <code>s = \"anagram\"</code> and <code>t = \"nagaram\"</code>, the output should be <code>true</code>.</li><li>If <code>s = \"rat\"</code> and <code>t = \"car\"</code>, the output should be <code>false</code>.</li></ul>",
+  "solution": "<p>The most efficient approach is to count character frequencies:</p><pre><code>def function(s, t):\n    # If lengths are different, they can't be anagrams\n    if len(s) != len(t):\n        return False\n    \n    # Create dictionaries to track character counts\n    char_count_s = {}\n    char_count_t = {}\n    \n    # Count characters in both strings\n    for i in range(len(s)):\n        char_count_s[s[i]] = char_count_s.get(s[i], 0) + 1\n        char_count_t[t[i]] = char_count_t.get(t[i], 0) + 1\n    \n    # Compare the character counts\n    return char_count_s == char_count_t\n    \n    # Alternative solution using sorting:\n    # return sorted(s) == sorted(t)</code></pre>",
+  "function_params_names": ["s", "t"],
   "test_cases": [
     {
       "id": 1,
       "input": {
-        "nums": [1, 2, 4, 6]
+        "s": "anagram",
+        "t": "nagaram"
       },
-      "output": [48, 24, 12, 8]
+      "output": true
     },
     {
       "id": 2,
       "input": {
-        "nums": [-1, 0, 1, 2, 3]
+        "s": "rat",
+        "t": "car"
       },
-      "output": [0, -6, 0, 0, 0]
+      "output": false
     },
     {
       "id": 3,
       "input": {
-        "nums": [1, 2, 3, 4, 5]
+        "s": "",
+        "t": ""
       },
-      "output": [120, 60, 40, 30, 24]
+      "output": true
     },
     {
       "id": 4,
       "input": {
-        "nums": [0, 0, 1, 2]
+        "s": "abc",
+        "t": "ab"
       },
-      "output": [0, 0, 0, 0]
+      "output": false
     },
     {
       "id": 5,
       "input": {
-        "nums": [-1, -1, -1, -1]
+        "s": "aab",
+        "t": "aba"
       },
-      "output": [-1, -1, -1, -1]
+      "output": true
     },
     {
       "id": 6,
       "input": {
-        "nums": [10]
+        "s": "Anagram",
+        "t": "nagaram"
       },
-      "output": [1]
+      "output": false
     },
     {
       "id": 7,
       "input": {
-        "nums": [1, 0]
+        "s": "a",
+        "t": "a"
       },
-      "output": [0, 1]
+      "output": true
+    },
+    {
+      "id": 8,
+      "input": {
+        "s": "a!b@c#",
+        "t": "c#b@a!"
+      },
+      "output": true
+    },
+    {
+      "id": 9,
+      "input": {
+        "s": "conversation",
+        "t": "conservation"
+      },
+      "output": true
+    },
+    {
+      "id": 10,
+      "input": {
+        "s": "listen",
+        "t": "silent"
+      },
+      "output": true
     }
   ]
 }

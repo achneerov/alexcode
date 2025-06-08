@@ -1,0 +1,56 @@
+{
+  "description": "<h2>Product of Array except self</h2><h3>Problem</h3><p>Given an integer array <code>nums</code>, return an array <code>output</code> where <code>output[i]</code> is the product of all the elements of <code>nums</code> except <code>nums[i]</code>. Each product is guaranteed to fit in a 32-bit integer.</p><h3>Examples:</h3><ul><li>If <code>nums = [1,2,4,6]</code>, the output should be <code>[48,24,12,8]</code>.</li><li>If <code>nums = [-1,0,1,2,3]</code>, the output should be <code>[0,-6,0,0,0]</code>.</li></ul><h3>Follow-up:</h3><p>Could you solve it in O(n) time without using the division operation?</p>",
+  "solution": "<p>The most efficient approach uses two passes through the array to calculate products without division:</p><pre><code>def function(nums):\n    n = len(nums)\n    output = [1] * n\n    \n    # First pass: calculate product of all elements to the left\n    left_product = 1\n    for i in range(n):\n        output[i] = left_product\n        left_product *= nums[i]\n    \n    # Second pass: multiply by product of all elements to the right\n    right_product = 1\n    for i in range(n-1, -1, -1):\n        output[i] *= right_product\n        right_product *= nums[i]\n    \n    return output</code></pre>",
+  "function_params_names": ["nums"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "nums": [1, 2, 4, 6]
+      },
+      "output": [48, 24, 12, 8]
+    },
+    {
+      "id": 2,
+      "input": {
+        "nums": [-1, 0, 1, 2, 3]
+      },
+      "output": [0, -6, 0, 0, 0]
+    },
+    {
+      "id": 3,
+      "input": {
+        "nums": [1, 2, 3, 4, 5]
+      },
+      "output": [120, 60, 40, 30, 24]
+    },
+    {
+      "id": 4,
+      "input": {
+        "nums": [0, 0, 1, 2]
+      },
+      "output": [0, 0, 0, 0]
+    },
+    {
+      "id": 5,
+      "input": {
+        "nums": [-1, -1, -1, -1]
+      },
+      "output": [-1, -1, -1, -1]
+    },
+    {
+      "id": 6,
+      "input": {
+        "nums": [10]
+      },
+      "output": [1]
+    },
+    {
+      "id": 7,
+      "input": {
+        "nums": [1, 0]
+      },
+      "output": [0, 1]
+    }
+  ]
+}

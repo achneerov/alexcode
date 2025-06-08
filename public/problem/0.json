@@ -1,71 +1,80 @@
 {
-  "description": "<h2>Two Sum</h2><h3>Problem</h3><p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p><p>You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.</p><h3>Examples:</h3><ul><li>If <code>nums = [2, 7, 11, 15]</code> and <code>target = 9</code>, the output should be <code>[0, 1]</code> because <code>nums[0] + nums[1] == 9</code>.</li><li>If <code>nums = [3, 2, 4]</code> and <code>target = 6</code>, the output should be <code>[1, 2]</code> because <code>nums[1] + nums[2] == 6</code>.</li><li>If <code>nums = [3, 3]</code> and <code>target = 6</code>, the output should be <code>[0, 1]</code> because <code>nums[0] + nums[1] == 6</code>.</li></ul>",
-  "solution": "<p>The most efficient approach uses a hash map (dictionary) to keep track of the numbers we've seen and their indices:</p><pre><code>def function(nums, target):\n    # Create a dictionary to store values we've seen and their indices\n    seen = {}\n    \n    # Iterate through the array with index\n    for i, num in enumerate(nums):\n        # Calculate the complement we need to find\n        complement = target - num\n        \n        # Check if the complement exists in our hash map\n        if complement in seen:\n            # Return the current index and the complement's index\n            return [seen[complement], i]\n        \n        # If not found, add the current number to the hash map\n        seen[num] = i\n    \n    # If no solution is found (though the problem states there will always be one)\n    return []</code></pre>",
-  "function_params_names": ["nums", "target"],
+  "description": "<h2>Contains Duplicate</h2><h3>Problem</h3><p>Given an integer array <code>nums</code>, return <code>true</code> if any value appears at least twice in the array, and return <code>false</code> if every element is distinct.</p><h3>Examples:</h3><ul><li><p>Input: nums = [1,2,3,1]</p><p>Output: true</p><p>Explanation: The element 1 occurs at the indices 0 and 3.</p></li><li><p>Input: nums = [1,2,3,4]</p><p>Output: false</p><p>Explanation: All elements are distinct.</p></li><li><p>Input: nums = [1,1,1,3,3,4,3,2,4,2]</p><p>Output: true</p></li></ul>",
+
+  "solution": "<p>The most efficient approach uses a hash set to keep track of elements we've seen:</p><pre><code>def function(nums):\n    # Create a set to track seen numbers\n    seen = set()\n    \n    # Iterate through the array\n    for num in nums:\n        # If we've already seen this number, return True\n        if num in seen:\n            return True\n        \n        # Add the number to our set of seen numbers\n        seen.add(num)\n    \n    # If we get through the entire array without finding a duplicate\n    return False</code></pre>",
+
+  "function_params_names": ["nums"],
+
   "test_cases": [
     {
       "id": 1,
       "input": {
-        "nums": [2, 7, 11, 15],
-        "target": 9
+        "nums": [1, 2, 3, 1]
       },
-      "output": [0, 1]
+      "output": true
     },
     {
       "id": 2,
       "input": {
-        "nums": [3, 2, 4],
-        "target": 6
+        "nums": [1, 2, 3, 4]
       },
-      "output": [1, 2]
+      "output": false
     },
     {
       "id": 3,
       "input": {
-        "nums": [3, 3],
-        "target": 6
+        "nums": [1, 1, 1, 3, 3, 4, 3, 2, 4, 2]
       },
-      "output": [0, 1]
+      "output": true
     },
     {
       "id": 4,
       "input": {
-        "nums": [0, 4, 3, 0],
-        "target": 0
+        "nums": []
       },
-      "output": [0, 3]
+      "output": false
     },
     {
       "id": 5,
       "input": {
-        "nums": [-1, -3, 5, 7],
-        "target": 4
+        "nums": [5]
       },
-      "output": [0, 2]
+      "output": false
     },
     {
       "id": 6,
       "input": {
-        "nums": [5, 75, 25],
-        "target": 100
+        "nums": [2, 2, 2, 2]
       },
-      "output": [1, 2]
+      "output": true
     },
     {
       "id": 7,
       "input": {
-        "nums": [1, 2, 3, 4, 5],
-        "target": 9
+        "nums": [-1, -1, 2, 3]
       },
-      "output": [3, 4]
+      "output": true
     },
     {
       "id": 8,
       "input": {
-        "nums": [10, 20, 30, 40, 50],
-        "target": 80
+        "nums": [0, 1, -1, 2, -2]
       },
-      "output": [2, 4]
+      "output": false
+    },
+    {
+      "id": 9,
+      "input": {
+        "nums": [100000, 99999, 100000]
+      },
+      "output": true
+    },
+    {
+      "id": 10,
+      "input": {
+        "nums": [0, 0]
+      },
+      "output": true
     }
   ]
 }
