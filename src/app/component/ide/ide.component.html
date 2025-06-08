@@ -1,5 +1,17 @@
-<textarea
-  class="ide-textarea"
-  [(ngModel)]="code"
-  (keydown)="onKeyDown($event)"
-></textarea>
+<div class="ide-container">
+  <div class="line-numbers" #lineNumbers>
+    <div *ngFor="let line of lineNumbersArray" class="line-number">
+      {{ line }}
+    </div>
+  </div>
+  <textarea
+    class="ide-textarea"
+    [(ngModel)]="code"
+    (keydown)="onKeyDown($event)"
+    (input)="updateLineNumbers()"
+    (scroll)="syncScroll($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    #codeTextarea
+  ></textarea>
+</div>

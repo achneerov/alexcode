@@ -5,6 +5,10 @@ import {
   OnDestroy,
   OnChanges,
   SimpleChanges,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  Renderer2,
 } from "@angular/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -22,19 +26,27 @@ import { Subscription } from "rxjs";
   templateUrl: "./ide.component.html",
   styleUrl: "./ide.component.scss",
 })
-export class IdeComponent implements OnInit, OnDestroy, OnChanges {
+export class IdeComponent
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit
+{
   @Input() problemData: Problem | undefined;
   code: string = "";
+  lineNumbersArray: number[] = [];
   private subscription: Subscription | null = null;
+
+  @ViewChild("codeTextarea") codeTextarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild("lineNumbers") lineNumbers!: ElementRef<HTMLDivElement>;
 
   constructor(
     private pyodideService: PyodideService,
     private codeExecutionService: CodeExecutionService,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit(): void {
     // Initialize code with the function template
     this.code = this.generateFunctionTemplate();
+    this.updateLineNumbers();
 
     // Subscribe to run code events
     this.subscription = this.codeExecutionService.runCode$.subscribe(() => {
@@ -42,16 +54,57 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+  ngAfterViewInit() {
+    // Initialize line numbers after view is initialized
+    this.updateLineNumbers();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     // Update code when problemData changes
     if (changes["problemData"] && changes["problemData"].currentValue) {
       this.code = this.generateFunctionTemplate();
+      this.updateLineNumbers();
     }
   }
 
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+  }
+
+  // Focus handlers to synchronize border colors
+  onFocus(): void {
+    const container = this.codeTextarea.nativeElement.closest(".ide-container");
+    if (container) {
+      this.renderer.addClass(container, "focused");
+    }
+  }
+
+  onBlur(): void {
+    const container = this.codeTextarea.nativeElement.closest(".ide-container");
+    if (container) {
+      this.renderer.removeClass(container, "focused");
+    }
+  }
+
+  updateLineNumbers(): void {
+    // Count the number of lines in the code
+    const lineCount = (this.code.match(/\n/g) || []).length + 1;
+    this.lineNumbersArray = Array.from({ length: lineCount }, (_, i) => i + 1);
+
+    // Update in the next cycle to ensure DOM is updated
+    setTimeout(() => {
+      if (this.codeTextarea && this.lineNumbers) {
+        this.syncScroll({ target: this.codeTextarea.nativeElement });
+      }
+    }, 0);
+  }
+
+  syncScroll(event: any): void {
+    if (this.lineNumbers && this.codeTextarea) {
+      this.lineNumbers.nativeElement.scrollTop =
+        this.codeTextarea.nativeElement.scrollTop;
     }
   }
 
@@ -78,16 +131,43 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    // Handle Cmd+Enter to run code - must be checked first
+    // Handle Tab key for simple indentation
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const textarea = this.codeTextarea.nativeElement;
+      const selectionStart = textarea.selectionStart;
+      const selectionEnd = textarea.selectionEnd;
+      const indentSize = 4; // Number of spaces for indentation
+
+      // Insert 4 spaces at cursor position
+      const indent = " ".repeat(indentSize);
+      this.code =
+        this.code.substring(0, selectionStart) +
+        indent +
+        this.code.substring(selectionEnd);
+
+      // Move cursor after inserted spaces
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd =
+          selectionStart + indentSize;
+      });
+
+      return;
+    }
+
+    // Rest of your existing key handlers...
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
       this.runCode();
-      return; // Stop processing after running code
+      return;
     }
 
     // Handle intelligent indentation when Enter is pressed
     if (event.key === "Enter") {
       this.handleEnterKey(event);
+      this.updateLineNumbers();
+      return;
     }
 
     // Handle Cmd+? (or Cmd+/) for comment toggling
@@ -97,6 +177,7 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
     ) {
       event.preventDefault();
       this.toggleComments();
+      return;
     }
   }
 
@@ -124,6 +205,9 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
     // Insert new line with proper indentation
     this.code = textBeforeCursor + "\n" + newIndentation + textAfterCursor;
 
+    // Update line numbers
+    this.updateLineNumbers();
+
     // Set cursor position after the indentation
     setTimeout(() => {
       textarea.selectionStart = textarea.selectionEnd =
@@ -137,10 +221,9 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private toggleComments(): void {
-    // Get selected text or use the whole code
-    const textarea = document.querySelector(
-      ".ide-textarea",
-    ) as HTMLTextAreaElement;
+    // Implementation unchanged from original
+    // ...existing implementation...
+    const textarea = this.codeTextarea.nativeElement;
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
 
@@ -176,5 +259,6 @@ export class IdeComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update code
     this.code = newLines.join("\n");
+    this.updateLineNumbers();
   }
 }
