@@ -172,7 +172,18 @@ export class PyodideService {
               const result = this.pyodide.runPython(functionCall);
 
               // Convert to JavaScript value
-              const jsResult = result.toJs();
+              let jsResult;
+              if (
+                result &&
+                typeof result === "object" &&
+                typeof result.toJs === "function"
+              ) {
+                // It's a Pyodide object with a toJs method
+                jsResult = result.toJs();
+              } else {
+                // It's already a JavaScript primitive or doesn't have toJs
+                jsResult = result;
+              }
 
               // First flush any print statements
               this.flushPrintBuffer();

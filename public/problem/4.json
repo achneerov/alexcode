@@ -1,0 +1,49 @@
+{
+  "description": "<h2>Palindrome Number</h2><h3>Problem</h3><p>Given an integer <code>x</code>, return <code>true</code> if <code>x</code> is a palindrome integer.</p><p>An integer is a palindrome when it reads the same backward as forward. For example, <code>121</code> is a palindrome while <code>123</code> is not.</p><h3>Examples:</h3><ul><li>If <code>x = 121</code>, the output should be <code>true</code> because reading from left to right and right to left gives the same result.</li><li>If <code>x = -121</code>, the output should be <code>false</code> because from left to right it reads <code>-121</code> and from right to left it reads <code>121-</code>.</li><li>If <code>x = 10</code>, the output should be <code>false</code> because from right to left it reads <code>01</code>.</li><li>If <code>x = -101</code>, the output should be <code>false</code>.</li></ul><p><strong>Follow up:</strong> Could you solve it without converting the integer to a string?</p>",
+  "solution": "<p>We can solve this by reversing the number and comparing it with the original:</p><pre><code>def function(x):\n    # Negative numbers cannot be palindromes\n    if x < 0:\n        return False\n    \n    # Single digit numbers are always palindromes\n    if x < 10:\n        return True\n    \n    # Numbers ending with 0 cannot be palindromes unless it's 0 itself\n    if x % 10 == 0 and x != 0:\n        return False\n    \n    # Reverse half of the number\n    reversed_half = 0\n    while x > reversed_half:\n        reversed_half = reversed_half * 10 + x % 10\n        x = x // 10\n    \n    # For even-digit numbers: x == reversed_half\n    # For odd-digit numbers: x == reversed_half // 10 (to remove the middle digit)\n    return x == reversed_half or x == reversed_half // 10</code></pre>",
+  "function_params_names": ["x"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "x": 121
+      },
+      "output": true
+    },
+    {
+      "id": 2,
+      "input": {
+        "x": -121
+      },
+      "output": false
+    },
+    {
+      "id": 3,
+      "input": {
+        "x": 10
+      },
+      "output": false
+    },
+    {
+      "id": 4,
+      "input": {
+        "x": -101
+      },
+      "output": false
+    },
+    {
+      "id": 5,
+      "input": {
+        "x": 0
+      },
+      "output": true
+    },
+    {
+      "id": 6,
+      "input": {
+        "x": 12321
+      },
+      "output": true
+    }
+  ]
+}

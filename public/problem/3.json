@@ -1,0 +1,49 @@
+{
+  "description": "<h2>Reverse Integer</h2><h3>Problem</h3><p>Given a signed 32-bit integer <code>x</code>, return <code>x</code> with its digits reversed. If reversing <code>x</code> causes the value to go outside the signed 32-bit integer range <code>[-2^31, 2^31 - 1]</code>, then return <code>0</code>.</p><p>Assume the environment does not allow you to store 64-bit integers (signed or unsigned).</p><h3>Examples:</h3><ul><li>If <code>x = 123</code>, the output should be <code>321</code>.</li><li>If <code>x = -123</code>, the output should be <code>-321</code>.</li><li>If <code>x = 120</code>, the output should be <code>21</code>.</li><li>If <code>x = 0</code>, the output should be <code>0</code>.</li></ul>",
+  "solution": "<p>To reverse an integer, we can repeatedly extract the last digit and add it to our result:</p><pre><code>def function(x):\n    # Handle negative numbers\n    sign = 1\n    if x < 0:\n        sign = -1\n        x = abs(x)\n    \n    # Reverse the digits\n    result = 0\n    while x > 0:\n        # Extract the last digit\n        last_digit = x % 10\n        \n        # Add to result\n        result = result * 10 + last_digit\n        \n        # Remove the last digit from x\n        x = x // 10\n    \n    # Apply sign\n    result = sign * result\n    \n    # Check for 32-bit integer overflow\n    if result < -2**31 or result > 2**31 - 1:\n        return 0\n    \n    return result</code></pre>",
+  "function_params_names": ["x"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "x": 123
+      },
+      "output": 321
+    },
+    {
+      "id": 2,
+      "input": {
+        "x": -123
+      },
+      "output": -321
+    },
+    {
+      "id": 3,
+      "input": {
+        "x": 120
+      },
+      "output": 21
+    },
+    {
+      "id": 4,
+      "input": {
+        "x": 0
+      },
+      "output": 0
+    },
+    {
+      "id": 5,
+      "input": {
+        "x": 1534236469
+      },
+      "output": 0
+    },
+    {
+      "id": 6,
+      "input": {
+        "x": -2147483648
+      },
+      "output": 0
+    }
+  ]
+}

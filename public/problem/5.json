@@ -1,0 +1,56 @@
+{
+  "description": "<h2>Roman to Integer</h2><h3>Problem</h3><p>Roman numerals are represented by seven different symbols: <code>I</code>, <code>V</code>, <code>X</code>, <code>L</code>, <code>C</code>, <code>D</code> and <code>M</code>.</p><table><tr><th>Symbol</th><th>Value</th></tr><tr><td>I</td><td>1</td></tr><tr><td>V</td><td>5</td></tr><tr><td>X</td><td>10</td></tr><tr><td>L</td><td>50</td></tr><tr><td>C</td><td>100</td></tr><tr><td>D</td><td>500</td></tr><tr><td>M</td><td>1000</td></tr></table><p>For example, <code>2</code> is written as <code>II</code> in Roman numeral, just two one's added together. <code>12</code> is written as <code>XII</code>, which is simply <code>X + II</code>. The number <code>27</code> is written as <code>XXVII</code>, which is <code>XX + V + II</code>.</p><p>Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not <code>IIII</code>. Instead, the number four is written as <code>IV</code>. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as <code>IX</code>. There are six instances where subtraction is used:</p><ul><li><code>I</code> can be placed before <code>V</code> (5) and <code>X</code> (10) to make 4 and 9.</li><li><code>X</code> can be placed before <code>L</code> (50) and <code>C</code> (100) to make 40 and 90.</li><li><code>C</code> can be placed before <code>D</code> (500) and <code>M</code> (1000) to make 400 and 900.</li></ul><p>Given a roman numeral, convert it to an integer.</p>",
+  "solution": "<p>We can solve this by going through the string from left to right:</p><pre><code>def function(s):\n    # Create a mapping for Roman symbols\n    roman_to_int = {\n        'I': 1,\n        'V': 5,\n        'X': 10,\n        'L': 50,\n        'C': 100,\n        'D': 500,\n        'M': 1000\n    }\n    \n    result = 0\n    prev_value = 0\n    \n    # Traverse the string from right to left\n    for char in reversed(s):\n        current_value = roman_to_int[char]\n        \n        # If current value is greater or equal to previous value, add it\n        # Otherwise subtract it (handles cases like IV, IX, etc.)\n        if current_value >= prev_value:\n            result += current_value\n        else:\n            result -= current_value\n        \n        # Update previous value\n        prev_value = current_value\n    \n    return result</code></pre>",
+  "function_params_names": ["s"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "s": "III"
+      },
+      "output": 3
+    },
+    {
+      "id": 2,
+      "input": {
+        "s": "IV"
+      },
+      "output": 4
+    },
+    {
+      "id": 3,
+      "input": {
+        "s": "IX"
+      },
+      "output": 9
+    },
+    {
+      "id": 4,
+      "input": {
+        "s": "LVIII"
+      },
+      "output": 58
+    },
+    {
+      "id": 5,
+      "input": {
+        "s": "MCMXCIV"
+      },
+      "output": 1994
+    },
+    {
+      "id": 6,
+      "input": {
+        "s": "MMMCMXCIX"
+      },
+      "output": 3999
+    },
+    {
+      "id": 7,
+      "input": {
+        "s": "CDXLIV"
+      },
+      "output": 444
+    }
+  ]
+}

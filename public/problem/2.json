@@ -1,0 +1,56 @@
+{
+  "description": "<h2>Valid Parentheses</h2><h3>Problem</h3><p>Given a string <code>s</code> containing just the characters <code>'('</code>, <code>')'</code>, <code>'{'</code>, <code>'}'</code>, <code>'['</code> and <code>']'</code>, determine if the input string is valid.</p><p>An input string is valid if:</p><ol><li>Open brackets must be closed by the same type of brackets.</li><li>Open brackets must be closed in the correct order.</li></ol><h3>Examples:</h3><ul><li>If <code>s = \"()\"</code>, the output should be <code>true</code>.</li><li>If <code>s = \"()[]{}\"</code>, the output should be <code>true</code>.</li><li>If <code>s = \"(]\"</code>, the output should be <code>false</code>.</li><li>If <code>s = \"([)]\"</code>, the output should be <code>false</code>.</li><li>If <code>s = \"{[]}\"</code>, the output should be <code>true</code>.</li></ul>",
+  "solution": "<p>To determine if parentheses are valid, we can use a stack data structure:</p><pre><code>def function(s):\n    # Create a stack to keep track of opening brackets\n    stack = []\n    \n    # Define a mapping for closing brackets to their opening counterparts\n    closing_to_opening = {\n        ')': '(',\n        '}': '{',\n        ']': '['\n    }\n    \n    # Iterate through each character in the string\n    for char in s:\n        # If it's an opening bracket, push it onto the stack\n        if char in '({[':\n            stack.append(char)\n        # If it's a closing bracket\n        elif char in ')}]':\n            # If stack is empty or the top doesn't match, return false\n            if not stack or stack.pop() != closing_to_opening[char]:\n                return False\n    \n    # If stack is empty, all brackets were properly closed\n    return len(stack) == 0</code></pre>",
+  "function_params_names": ["s"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "s": "()"
+      },
+      "output": true
+    },
+    {
+      "id": 2,
+      "input": {
+        "s": "()[]{}"
+      },
+      "output": true
+    },
+    {
+      "id": 3,
+      "input": {
+        "s": "(]"
+      },
+      "output": false
+    },
+    {
+      "id": 4,
+      "input": {
+        "s": "([)]"
+      },
+      "output": false
+    },
+    {
+      "id": 5,
+      "input": {
+        "s": "{[]}"
+      },
+      "output": true
+    },
+    {
+      "id": 6,
+      "input": {
+        "s": "((("
+      },
+      "output": false
+    },
+    {
+      "id": 7,
+      "input": {
+        "s": ")))"
+      },
+      "output": false
+    }
+  ]
+}

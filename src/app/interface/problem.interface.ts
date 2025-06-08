@@ -7,9 +7,6 @@ export interface Problem {
 
 export interface TestCase {
   id: number;
-  input: {
-    nums: number[];
-    target: number;
-  };
-  output: number[];
+  input: any;
+  output: any;
 }

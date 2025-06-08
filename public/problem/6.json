@@ -1,0 +1,49 @@
+{
+  "description": "<h2>Longest Common Prefix</h2><h3>Problem</h3><p>Write a function to find the longest common prefix string amongst an array of strings.</p><p>If there is no common prefix, return an empty string <code>\"\"</code>.</p><h3>Examples:</h3><ul><li>If <code>strs = [\"flower\", \"flow\", \"flight\"]</code>, the output should be <code>\"fl\"</code> because \"fl\" is the longest common prefix.</li><li>If <code>strs = [\"dog\", \"racecar\", \"car\"]</code>, the output should be <code>\"\"</code> because there is no common prefix among the input strings.</li></ul>",
+  "solution": "<p>We can solve this by comparing characters from each string at the same position:</p><pre><code>def function(strs):\n    # Edge cases\n    if not strs:\n        return \"\"\n    if len(strs) == 1:\n        return strs[0]\n    \n    # Find the shortest string length\n    min_len = min(len(s) for s in strs)\n    \n    # Compare each character position across all strings\n    for i in range(min_len):\n        char = strs[0][i]  # Character to compare with\n        \n        # Check if this character is the same across all strings\n        for string in strs[1:]:\n            if string[i] != char:\n                return strs[0][:i]  # Return prefix up to this position\n    \n    # If we've gone through all characters, return the shortest string\n    return strs[0][:min_len]</code></pre>",
+  "function_params_names": ["strs"],
+  "test_cases": [
+    {
+      "id": 1,
+      "input": {
+        "strs": ["flower", "flow", "flight"]
+      },
+      "output": "fl"
+    },
+    {
+      "id": 2,
+      "input": {
+        "strs": ["dog", "racecar", "car"]
+      },
+      "output": ""
+    },
+    {
+      "id": 3,
+      "input": {
+        "strs": [""]
+      },
+      "output": ""
+    },
+    {
+      "id": 4,
+      "input": {
+        "strs": ["a"]
+      },
+      "output": "a"
+    },
+    {
+      "id": 5,
+      "input": {
+        "strs": ["ab", "a"]
+      },
+      "output": "a"
+    },
+    {
+      "id": 6,
+      "input": {
+        "strs": ["abc", "abc", "abc"]
+      },
+      "output": "abc"
+    }
+  ]
+}
