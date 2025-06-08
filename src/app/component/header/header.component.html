@@ -2,11 +2,14 @@
   <button mat-flat-button color="accent" (click)="goToProblem()">
     Go to Problem
   </button>
-  <input
-    placeholder="Search..."
-    [(ngModel)]="searchText"
-    (keydown)="onSearchKeydown($event)"
-  />
+  <div class="search-container">
+    <input
+      placeholder="Search..."
+      [(ngModel)]="searchText"
+      (keydown)="onSearchKeydown($event)"
+    />
+    <div *ngIf="showErrorMessage" class="error-message">Invalid problem ID</div>
+  </div>
   <div class="spacer"></div>
   <button mat-flat-button class="custom-green-button" (click)="runCode()">
     Run Code

@@ -5,11 +5,27 @@ mat-toolbar {
   padding: 0 16px;
 }
 
+.search-container {
+  position: relative; /* This is important for absolute positioning of child */
+}
+
 input {
   height: 32px;
   padding: 0 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.error-message {
+  position: absolute;
+  color: #f44336; /* Material red */
+  font-size: 12px;
+  left: 100%; /* Position it at the right edge of the input */
+  top: 50%; /* Center it vertically */
+  transform: translateY(-50%); /* Perfect vertical centering */
+  white-space: nowrap;
+  margin-left: 8px; /* Add some spacing between input and message */
+  pointer-events: none; /* Allow clicking through the error message */
 }
 
 .spacer {
